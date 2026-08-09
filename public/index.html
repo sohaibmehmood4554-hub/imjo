@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>IMGO — AI background removal, enhancement & image tools</title>
+<meta name="description" content="Remove backgrounds, enhance photos with AI, and crop, convert, compress or watermark images — free, no login, all client-side except the AI tools." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark checker" aria-hidden="true" style="background:var(--safelight);color:var(--safelight-ink);display:grid;place-items:center;">IM</span>
+    <span class="brand-name">IMGO</span>
+    <span class="brand-sub">by smtoolskit</span>
+  </div>
+  <div class="topbar-actions">
+    <span class="quota-pill" id="quotaPill">AI requests today: <strong id="quotaValue">—</strong></span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark or light theme">◐</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero container">
+    <p class="eyebrow">// image toolkit</p>
+    <h1>Decide what stays. <em>Let go of the rest.</em></h1>
+    <p class="lede">Two AI tools handle the hard part — cutting subjects clean and rescuing rough photos. Five more classic tools handle everything else, right in your browser. No account, no upload history kept.</p>
+
+    <div class="tool-grid">
+      <!-- AI Background Remover -->
+      <article class="tool-card remove-bg">
+        <div class="card-media checker" aria-hidden="true"></div>
+        <div class="card-body">
+          <span class="tag">AI · Background Remover</span>
+          <h3>Cut the subject loose</h3>
+          <p>Drop a photo and IMGO isolates the subject onto a transparent PNG — hair, edges and all.</p>
+
+          <div class="ad-slot" data-ad-slot="hero-remove-bg-top"></div>
+
+          <label class="dropzone" id="dz-remove-bg" tabindex="0">
+            <span class="dz-icon">⬇</span>
+            <span>Drop an image, or click to choose one</span>
+            <input type="file" accept="image/png,image/jpeg,image/webp" id="file-remove-bg" />
+          </label>
+          <p style="font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin-top:10px;">PNG · JPEG · WEBP — up to 9 AI edits/day per device</p>
+        </div>
+      </article>
+
+      <!-- AI Image Enhancer -->
+      <article class="tool-card enhance">
+        <div class="card-media checker" aria-hidden="true"></div>
+        <div class="card-body">
+          <span class="tag">AI · Image Enhancer</span>
+          <h3>Rescue a rough photo</h3>
+          <p>Noise, blur, flat exposure — IMGO sharpens detail and balances color while keeping faces natural.</p>
+
+          <div class="ad-slot" data-ad-slot="hero-enhance-top"></div>
+
+          <label class="dropzone" id="dz-enhance" tabindex="0">
+            <span class="dz-icon">⬇</span>
+            <span>Drop an image, or click to choose one</span>
+            <input type="file" accept="image/png,image/jpeg,image/webp" id="file-enhance" />
+          </label>
+          <p style="font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin-top:10px;">PNG · JPEG · WEBP — up to 9 AI edits/day per device</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section container" id="classic-tools">
+    <div class="section-head">
+      <h2>Classic tools</h2>
+      <span class="note">// runs entirely on your device, no upload</span>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Classic image tools">
+      <button class="tab-btn active" data-panel="panel-crop">Crop &amp; Resize</button>
+      <button class="tab-btn" data-panel="panel-convert">Format Converter</button>
+      <button class="tab-btn" data-panel="panel-compress">Compressor</button>
+      <button class="tab-btn" data-panel="panel-watermark">Watermark</button>
+      <button class="tab-btn" data-panel="panel-filters">Filter Presets</button>
+    </div>
+
+    <!-- Crop & Resize -->
+    <div class="tool-panel active" id="panel-crop">
+      <div class="mini-tool">
+        <div class="mini-tool-grid">
+          <div>
+            <label class="dropzone" id="dz-crop" tabindex="0">
+              <span class="dz-icon">⬇</span><span>Drop an image to crop &amp; resize</span>
+              <input type="file" accept="image/*" id="file-crop" />
+            </label>
+            <div class="canvas-wrap checker" style="margin-top:14px;">
+              <canvas id="canvas-crop" width="600" height="400"></canvas>
+            </div>
+          </div>
+          <div class="controls">
+            <label for="crop-width">Width (px)</label>
+            <input type="number" id="crop-width" min="1" />
+            <label for="crop-height">Height (px)</label>
+            <input type="number" id="crop-height" min="1" />
+            <label><input type="checkbox" id="crop-lock" checked style="width:auto;display:inline;margin-right:6px;">Lock aspect ratio</label>
+            <div class="btn-row">
+              <button class="btn btn-primary" id="btn-crop-apply">Apply resize</button>
+              <button class="btn btn-ghost" id="btn-crop-download">Download PNG</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Format Converter -->
+    <div class="tool-panel" id="panel-convert">
+      <div class="mini-tool">
+        <div class="mini-tool-grid">
+          <div>
+            <label class="dropzone" id="dz-convert" tabindex="0">
+              <span class="dz-icon">⬇</span><span>Drop an image to convert</span>
+              <input type="file" accept="image/*" id="file-convert" />
+            </label>
+            <div class="canvas-wrap checker" style="margin-top:14px;">
+              <canvas id="canvas-convert" width="600" height="400"></canvas>
+            </div>
+          </div>
+          <div class="controls">
+            <label for="convert-format">Output format</label>
+            <select id="convert-format">
+              <option value="image/png">PNG</option>
+              <option value="image/jpeg">JPG</option>
+              <option value="image/webp">WEBP</option>
+            </select>
+            <p style="font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin-top:8px;">AVIF export depends on your browser's canvas support and may fall back to PNG.</p>
+            <div class="btn-row">
+              <button class="btn btn-primary" id="btn-convert-download">Convert &amp; download</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compressor -->
+    <div class="tool-panel" id="panel-compress">
+      <div class="mini-tool">
+        <div class="mini-tool-grid">
+          <div>
+            <label class="dropzone" id="dz-compress" tabindex="0">
+              <span class="dz-icon">⬇</span><span>Drop an image to compress</span>
+              <input type="file" accept="image/*" id="file-compress" />
+            </label>
+            <div class="canvas-wrap checker" style="margin-top:14px;">
+              <canvas id="canvas-compress" width="600" height="400"></canvas>
+            </div>
+            <p style="font-family:var(--mono);font-size:12px;color:var(--ink-dim);margin-top:10px;" id="compress-size-readout"></p>
+          </div>
+          <div class="controls">
+            <label for="compress-quality">Quality (<span id="compress-quality-val">75</span>%)</label>
+            <input type="range" id="compress-quality" min="1" max="100" value="75" />
+            <div class="btn-row">
+              <button class="btn btn-primary" id="btn-compress-download">Download compressed</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Watermark -->
+    <div class="tool-panel" id="panel-watermark">
+      <div class="mini-tool">
+        <div class="mini-tool-grid">
+          <div>
+            <label class="dropzone" id="dz-watermark" tabindex="0">
+              <span class="dz-icon">⬇</span><span>Drop an image to watermark</span>
+              <input type="file" accept="image/*" id="file-watermark" />
+            </label>
+            <div class="canvas-wrap checker" style="margin-top:14px;">
+              <canvas id="canvas-watermark" width="600" height="400"></canvas>
+            </div>
+          </div>
+          <div class="controls">
+            <label for="wm-text">Watermark text</label>
+            <input type="text" id="wm-text" value="© your name" />
+            <label for="wm-opacity">Opacity (<span id="wm-opacity-val">45</span>%)</label>
+            <input type="range" id="wm-opacity" min="5" max="100" value="45" />
+            <label for="wm-size">Size (<span id="wm-size-val">32</span>px)</label>
+            <input type="range" id="wm-size" min="10" max="120" value="32" />
+            <label for="wm-position">Position</label>
+            <select id="wm-position">
+              <option value="br">Bottom right</option>
+              <option value="bl">Bottom left</option>
+              <option value="tr">Top right</option>
+              <option value="tl">Top left</option>
+              <option value="center">Center</option>
+              <option value="tile">Tiled</option>
+            </select>
+            <div class="btn-row">
+              <button class="btn btn-primary" id="btn-watermark-apply">Apply watermark</button>
+              <button class="btn btn-ghost" id="btn-watermark-download">Download PNG</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Presets -->
+    <div class="tool-panel" id="panel-filters">
+      <div class="mini-tool">
+        <div class="mini-tool-grid">
+          <div>
+            <label class="dropzone" id="dz-filters" tabindex="0">
+              <span class="dz-icon">⬇</span><span>Drop an image to filter</span>
+              <input type="file" accept="image/*" id="file-filters" />
+            </label>
+            <div class="canvas-wrap checker" style="margin-top:14px;">
+              <canvas id="canvas-filters" width="600" height="400"></canvas>
+            </div>
+          </div>
+          <div class="controls">
+            <label for="filter-preset">Preset</label>
+            <select id="filter-preset">
+              <option value="none">None</option>
+              <option value="grayscale">Grayscale</option>
+              <option value="sepia">Sepia</option>
+              <option value="blur">Blur</option>
+            </select>
+            <label for="filter-brightness">Brightness (<span id="filter-brightness-val">100</span>%)</label>
+            <input type="range" id="filter-brightness" min="30" max="200" value="100" />
+            <label for="filter-contrast">Contrast (<span id="filter-contrast-val">100</span>%)</label>
+            <input type="range" id="filter-contrast" min="30" max="200" value="100" />
+            <div class="btn-row">
+              <button class="btn btn-primary" id="btn-filters-apply">Apply filters</button>
+              <button class="btn btn-ghost" id="btn-filters-download">Download PNG</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <span>IMGO — part of <a href="https://smtoolskit.com">smtoolskit.com</a></span>
+    <span>Images for the AI tools are sent only to Google Gemini for processing and are not stored by IMGO.</span>
+  </div>
+</footer>
+
+<!-- Processing modal (shown while an AI request runs) -->
+<div class="modal-overlay" id="modal-processing">
+  <div class="modal">
+    <div class="spinner" aria-hidden="true"></div>
+    <h4 id="processing-title">Processing your image…</h4>
+    <p id="processing-sub">This usually takes a few seconds.</p>
+    <div class="ad-slot" data-ad-slot="processing-modal"></div>
+  </div>
+</div>
+
+<!-- Result / download modal -->
+<div class="modal-overlay" id="modal-result">
+  <div class="modal">
+    <h4 id="result-title">Done</h4>
+    <div class="result-preview checker">
+      <img id="result-image" alt="Processed result" />
+    </div>
+    <div class="ad-slot" data-ad-slot="result-modal"></div>
+    <div class="btn-row" style="justify-content:center;">
+      <a class="btn btn-primary" id="result-download" download="imgo-result.png">Download</a>
+      <button class="btn btn-ghost" id="result-close">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Limit reached modal -->
+<div class="modal-overlay" id="modal-limit">
+  <div class="modal">
+    <h4>Daily processing limit reached</h4>
+    <p>Please try again tomorrow. Counters reset at 00:00 UTC.</p>
+    <div class="btn-row" style="justify-content:center;">
+      <button class="btn btn-primary" id="limit-close">Got it</button>
+    </div>
+  </div>
+</div>
+
+<!-- Error modal -->
+<div class="modal-overlay" id="modal-error">
+  <div class="modal">
+    <h4>Something went wrong</h4>
+    <p id="error-message">Please try again.</p>
+    <div class="btn-row" style="justify-content:center;">
+      <button class="btn btn-primary" id="error-close">Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

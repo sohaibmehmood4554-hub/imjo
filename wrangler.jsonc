@@ -1,0 +1,37 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "imgo-smtoolskit",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-01-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Static site (index.html, css, js, _headers) served automatically
+  // for any request src/worker.js doesn't handle itself.
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+
+  // KV namespace used for per-device + global daily rate limiting.
+  // Create it with: npx wrangler kv namespace create IMGO_RATELIMIT_KV
+  // then paste the returned id below (and a separate one for preview_id
+  // if you want preview deployments to have isolated counters).
+  "kv_namespaces": [
+    {
+      "binding": "IMGO_RATELIMIT_KV",
+      "id": "YOUR_KV_NAMESPACE_ID",
+      "preview_id": "YOUR_PREVIEW_KV_NAMESPACE_ID"
+    }
+  ],
+
+  "vars": {
+    "ALLOWED_ORIGIN": "https://imgo.smtoolskit.com",
+    "PER_DEVICE_DAILY_LIMIT": "9",
+    "GLOBAL_DAILY_LIMIT": "999"
+  }
+
+  // NOTE ON SECRETS (never put these in this file or in vars):
+  //   npx wrangler secret put GEMINI_API_KEY
+  // The Gemini key must only ever exist as a Cloudflare secret bound
+  // to the Worker. It is never sent to, or readable by, the browser.
+}
