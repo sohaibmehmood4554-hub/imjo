@@ -25,7 +25,7 @@
   ],
 
   "vars": {
-    "ALLOWED_ORIGIN": "https://imgo.smtoolskit.com",
+    "ALLOWED_ORIGIN": "https://imjo.smtoolskit.com",
     "PER_DEVICE_DAILY_LIMIT": "9",
     "GLOBAL_DAILY_LIMIT": "999"
   }
