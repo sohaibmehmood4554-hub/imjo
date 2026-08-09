@@ -19,7 +19,7 @@
   "kv_namespaces": [
     {
       "binding": "IMGO_RATELIMIT_KV",
-      "id": "YOUR_KV_NAMESPACE_ID",
+      "id": "c80f2789a3ac4bc390a11d175df17244",
       "preview_id": "YOUR_PREVIEW_KV_NAMESPACE_ID"
     }
   ],
